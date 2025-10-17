@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+streamlit
+yfinance
+pandas
+numpy
+requests
+beautifulsoup4
+transformers
+torch
+openai
+langchain
+python-dotenv
+tf-keras
