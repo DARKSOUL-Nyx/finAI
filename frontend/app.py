@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from agents.data_agent import fetch_stock_data as get_stock_data
 from agents.sentiment_agent import analyze_sentiment
+from agents.news_agent import fetch_latest_news
 from backend.models import generate_portfolio, portfolio_dataframe
 
 API_URL = "http://127.0.0.1:8000"
@@ -38,12 +39,21 @@ with col1:
     else:
         st.error(f"Could not fetch stock data or find the close price column for {company}.")
 
-# --- Sentiment ---
+# --- Sentiment & News ---
 with col2:
-    st.subheader("🧠 Market Sentiment")
-    headlines = [{"headline": f"{company} shows steady Q2 performance"}, {"headline": f"Analysts bullish on {company}"}]
-    sentiment_label, score = analyze_sentiment(headlines)
-    st.metric("Sentiment", sentiment_label, f"{score:.2f}")
+    st.subheader("🧠 Market Sentiment & News")
+    
+    # Fetch and display news
+    headlines = fetch_latest_news(company)
+    if headlines:
+        sentiment_label, score = analyze_sentiment(headlines)
+        st.metric("Overall Sentiment", sentiment_label, f"{score:.2f}")
+        
+        st.markdown("#### Top 5 Headlines:")
+        for article in headlines[:5]:
+            st.markdown(f"- [{article['headline']}]({article['url']})")
+    else:
+        st.warning("Could not fetch news headlines.")
 
 # # --- Portfolio Section ---
 # st.markdown("### 💼 Personalized Portfolio Suggestion")

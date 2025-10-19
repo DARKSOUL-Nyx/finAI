@@ -1,90 +1,154 @@
-1. Multi-Agent Architecture (Agentic Intelligence)
+# 💸 FinAI — The Agentic AI Investment Advisor
 
-Turn your single advisor bot into a team of financial agents:
+Empowering investors with AI-driven reasoning and personalized financial strategies.
 
-News Agent → Monitors financial news, tweets, and Reddit for market sentiment.
+---
 
-Data Agent → Fetches historical stock/crypto prices and identifies trends.
+FinAI is a sophisticated financial advisor application that leverages a **multi-agent system** to provide insightful, data-driven investment advice.
+It combines real-time market data, news sentiment analysis, and personalized user preferences to deliver **actionable recommendations** through an intuitive chat interface.
 
-User Agent → Learns user risk appetite and preferences.
+---
 
-Decision Agent → Combines inputs and gives final portfolio recommendations.
+## 🚀 Key Features
 
-Why it stands out: Agentic AI is the theme’s sweet spot — shows that your project can reason, plan, and self-coordinate.
+### 📈 Real-Time Stock Analysis
 
-2. Personalized Portfolio Generator
+Fetches and displays up-to-date stock data for any given ticker.
 
-Use the user’s goals + budget to create custom portfolios.
+### 🧠 Market Sentiment Analysis
 
-Flow:
+Scrapes financial news and analyzes sentiment using the **FinBERT** model.
 
-User inputs their budget, duration, and risk type (e.g., “Low-risk, 2-year horizon”).
+### 🤖 Multi-Agent Architecture
 
-Your AI suggests investment splits — e.g.,
+A team of specialized AI agents collaborate to gather and process information:
 
-50% in mutual funds
+* **Data Agent:** Fetches historical stock prices.
+* **News Agent:** Gathers the latest financial news.
+* **Sentiment Agent:** Analyzes the sentiment of news headlines.
+* **Decision Agent:** Synthesizes all data to provide a final, reasoned recommendation.
 
-30% in blue-chip stocks
+### 💬 Interactive Chat Advisor
 
-20% in bonds or gold ETFs
+Chat with **FinGenie** to get personalized advice based on your risk tolerance and budget.
 
-You can fine-tune a lightweight model or use OpenAI’s API / HuggingFace models with a rules-based backend.
+### 💼 Personalized Portfolio Suggestions
 
-3. Sentiment-Aware Market Predictor
+Generates a **custom portfolio distribution** based on your risk profile (Low, Medium, or High).
 
-Integrate a sentiment model (like FinBERT) that analyzes:
+---
 
-Live news headlines
+## 🧮 Tech Stack
 
-Tweets from financial influencers
+**Frontend:**
 
-Reddit’s r/investing posts
+* Streamlit
 
-Then show:
-📈 “Market sentiment today: Positive (0.72)”
-💬 “Tech stocks are gaining due to AI market optimism.”
+**Backend:**
 
-Tools:
-transformers, yfinance, tweepy, BeautifulSoup, FinBERT.
+* FastAPI
 
-4. Voice-based Financial Agent
+**AI & Machine Learning:**
 
-Make it more engaging — integrate speech recognition (Whisper API) and speech response (TTS).
-Users can literally ask:
+* LangChain for LLM orchestration
+* Transformers (FinBERT) for sentiment analysis
+* OpenRouter for access to various LLMs (e.g., Google Gemini, Llama)
 
-“Hey, what’s my investment summary today?”
-“Should I buy Tesla stocks this week?”
+**Data & Analysis:**
 
-Frameworks: Streamlit + SpeechRecognition + pyttsx3
+* Pandas for data manipulation
+* yfinance for stock data
+* Plotly for interactive charts
 
-5. Smart Alerts (Proactive AI)
+---
 
-Use Agentic AI’s reasoning to trigger actions:
+## 🏁 Getting Started
 
-“User’s portfolio has lost 5% — rebalance recommended.”
+Follow these steps to get the **FinAI** application running on your local machine.
 
-“New mutual fund matches your goals — want to explore?”
+### 1. Prerequisites
 
-“Gold is trending upwards; small reallocation advised.”
+* Python 3.9+
+* An **OpenRouter API Key**
 
-This shows proactivity, not just passivity — an AI that thinks and acts on the user’s behalf.
+### 2. Clone the Repository
 
-6. Explainable AI (XAI) Dashboard
+```bash
+git clone https://github.com/your-username/finai.git
+cd finai
+```
 
-Visualize:
+### 3. Install Dependencies
 
-“Why the AI suggested this portfolio”
+Install all the required Python packages using the `requirements.txt` file.
 
-“Feature importance: 60% based on risk score, 25% sentiment, 15% trend”
+```bash
+pip install -r requirements.txt
+```
 
-Use shap or lime for simple explainability.
+### 4. Set Up Environment Variables
 
-Why this helps: Judges love projects that aren’t black-box — shows you understand trust and interpretability in AI.
+Create a file named `.env` in the root directory of the project and add your OpenRouter API key:
 
-7. AI-Powered Fraud / Scam Detector (Add-on)
+```bash
+OPENROUTER_API_KEY="your_openrouter_api_key_here"
+```
 
-A smaller but high-value add-on:
+### 5. Run the Application
 
-Detects fake investment websites or phishing attempts using NLP classification.
+You’ll need two separate terminal windows to run both the backend and the frontend.
 
-Example: “This message looks like a scam (94% confidence).”
+**Backend:**
+
+```bash
+uvicorn backend.api:app --reload
+```
+
+**Frontend:**
+
+```bash
+streamlit run frontend/app.py
+```
+
+Then open your browser and navigate to **[http://localhost:8501](http://localhost:8501)** to start using FinAI!
+
+---
+
+## ⚙️ How It Works
+
+The application is built with a **decoupled frontend and backend**, communicating via REST API.
+The core logic is handled by a team of AI agents:
+
+1. **User Input:** The user provides a stock ticker, risk level, and budget through the Streamlit interface.
+2. **Data Collection:** The Data Agent fetches historical stock data, while the News Agent scrapes recent headlines.
+3. **Sentiment Analysis:** The Sentiment Agent uses FinBERT to determine if market sentiment is positive, negative, or neutral.
+4. **Agentic Response:** All this data is passed to the Decision Agent, which uses an LLM (like Google Gemini Pro) to produce a reasoned investment recommendation.
+5. **Display:** The final advice, charts, and sentiment scores are presented in the chat interface.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community!
+To contribute:
+
+1. **Fork** the repository.
+2. **Create a new branch** for your feature or bug fix:
+
+   ```bash
+   git checkout -b feature/my-new-feature
+   ```
+3. **Make your changes** and commit them with a clear message.
+4. **Push** to your branch and submit a **Pull Request**.
+
+---
+
+## 🧾 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+### ⭐ Support the Project
+
+If you find **FinAI** useful, consider giving it a ⭐ on GitHub!
