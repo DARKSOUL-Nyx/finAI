@@ -61,6 +61,10 @@ Generates a **custom portfolio distribution** based on your risk profile (Low, M
 * Plotly for interactive charts
 
 ---
+[![Watch the video](https://drive.google.com/file/d/1hY-CKiyg9_VgxxpVUsTtdMkuDjHP5pPV/view?usp=sharing)](https://www.youtube.com/watch?v=uPH0AtPdygc)
+
+
+---
 
 ## 🏁 Getting Started
 
