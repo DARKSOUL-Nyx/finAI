@@ -5,8 +5,11 @@ from typing import Dict, Any
 import math
 
 # LangChain / OpenAI imports
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
+
+from backend.models import generate_portfolio
+
 
 load_dotenv()
 
@@ -23,19 +26,25 @@ def _format_portfolio(portfolio: Dict[str, float]) -> str:
     lines.append(f"Total: ₹{total:.2f}")
     return "\n".join(lines)
 
-def get_advice_with_reasoning(
+def agentic_response(
+    user_message: str,
     ticker: str,
     portfolio: Dict[str, float],
     sentiment_label: str,
     sentiment_score: float,
     risk_level: str,
     latest_price: float,
-    market_notes: str = ""
+    market_notes: str = "",
+    chat_history: list = None,
+    headlines: list = None
 ) -> Dict[str, Any]:
     """
-    Returns an explainable recommendation from an LLM.
+    Generates an agentic response using a language model, incorporating chat history.
     """
-    # Compose prompt context
+    if chat_history is None:
+        chat_history = []
+
+    # Prepare the prompt for the language model
     portfolio_text = _format_portfolio(portfolio)
     prompt_system = SystemMessage(content=(
         "You are FinGenie, an expert financial advisor. "
@@ -46,9 +55,17 @@ def get_advice_with_reasoning(
         "5) output a confidence estimate (low/medium/high) and a numeric confidence (0-100). "
         "Prefer conservative language for low-risk users and more assertive language for high-risk users. "
         "Use bullet points for lists. Keep numeric values explicit (e.g., amounts or percentages)."
+        "You should also respond to general chat messages and remember the history of the conversation."
     ))
 
+    # Add the chat history to the prompt
+    prompt_history = [SystemMessage(content="Here is the chat history:")]
+    for message in chat_history:
+        prompt_history.append(HumanMessage(content=f"User: {message['user']}"))
+        prompt_history.append(SystemMessage(content=f"AI: {message['ai']}"))
+
     prompt_user = HumanMessage(content=(
+        f"The user's message is: {user_message}\n\n"
         f"Analyze the ticker: {ticker}\n\n"
         f"Portfolio snapshot:\n{portfolio_text}\n\n"
         f"Latest price for {ticker}: ₹{latest_price:.2f}\n"
@@ -65,7 +82,7 @@ def get_advice_with_reasoning(
     ))
 
     # Call the LLM
-    response = llm([prompt_system, prompt_user])
+    response = llm([prompt_system] + prompt_history + [prompt_user])
     text = response.content
 
     # Simple parsing: we will return the raw text plus minimal structure.
@@ -77,4 +94,6 @@ def get_advice_with_reasoning(
         "sentiment_label": sentiment_label,
         "sentiment_score": sentiment_score,
         "risk_level": risk_level,
+        "headlines": headlines,
     }
+

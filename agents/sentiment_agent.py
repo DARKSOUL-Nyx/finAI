@@ -1,37 +1,20 @@
-# from transformers import pipeline
-# import requests
-# from bs4 import BeautifulSoup
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+import torch
 
-# sentiment_analyzer = pipeline("sentiment-analysis", model="ProsusAI/finbert")
+tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+sentiment_pipeline = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
 
-# def fetch_financial_news(company):
-#     url = f"https://news.google.com/search?q={company}%20stock&hl=en-IN&gl=IN&ceid=IN:en"
-#     page = requests.get(url)
-#     soup = BeautifulSoup(page.content, "html.parser")
-#     headlines = [h.text for h in soup.find_all("a", class_="JtKRv")]
-#     return headlines[:5]
-
-# def analyze_sentiment(headlines):
-#     results = sentiment_analyzer(headlines)
-#     avg_score = sum([r['score'] if r['label'] == 'positive' else -r['score'] for r in results]) / len(results)
-#     sentiment_label = "Positive" if avg_score > 0 else "Negative"
-#     return sentiment_label, avg_score
-
-from transformers import pipeline
-import json
-
-sentiment_analyzer = pipeline("sentiment-analysis", model="ProsusAI/finbert")
-
-def analyze_news_sentiment():
-    try:
-        with open("data/news_data.json", "r") as f:
-            headlines = json.load(f)
-        results = sentiment_analyzer(headlines)
-        avg_score = sum([
-            r['score'] if r['label'] == 'positive' else -r['score']
-            for r in results
-        ]) / len(results)
-        sentiment_label = "Positive" if avg_score > 0 else "Negative"
-        return sentiment_label, avg_score
-    except Exception as e:
+def analyze_sentiment(headlines):
+    if not headlines:
         return "Neutral", 0.0
+
+    texts = [h["headline"] for h in headlines]
+    results = sentiment_pipeline(texts)
+    
+    avg_score = sum(
+        (r["score"] if r["label"] == "positive" else -r["score"]) for r in results
+    ) / len(results)
+
+    sentiment = "Positive" if avg_score > 0 else "Negative"
+    return sentiment, round(avg_score, 3)
